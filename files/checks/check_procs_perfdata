@@ -1,0 +1,45 @@
+#!/usr/bin/perl -w
+############################################################################
+# Script : check_procs_perfdata
+# Description : Wrapper pour le plugin check_procs, pour rajouter les donnees
+# 		de perfs
+############################################################################
+
+use strict;
+
+############################################################################
+# MAIN
+############################################################################
+
+# controle que ca ressemble a une ligne de commande
+if ( $ARGV[0] !~ m/check_procs/ ) {
+	print "La commande n'est pas reconnue ou le plugin n'est pas check_procs\n";
+	exit 3;
+}
+
+# lance la commande et recupere la sortie
+my $sortie = `@ARGV`;
+my $warn = $ARGV[2];
+my $crit = $ARGV[4];
+my $retour = $?>>8;
+my $command = "/usr/lib/nagios/plugins/check_procs -s ";
+my $tmp = "";
+chomp $sortie;
+
+# On cherche le nombre de processus
+if ( $sortie =~ /\w+\:\s+(\d+)\s+\w+/ ){
+	# afficher la sortie et les donnees de perfs
+	my $procs    = $1;
+   $tmp = `$command Z`; chomp $tmp; $tmp =~ /\w+\:\s+(\d+)\s+\w+/; my $zombie = $1;
+   $tmp = `$command D`; chomp $tmp; $tmp =~ /\w+\:\s+(\d+)\s+\w+/; my $dead = $1;
+   $tmp = `$command R`; chomp $tmp; $tmp =~ /\w+\:\s+(\d+)\s+\w+/; my $runnable = $1;
+   $tmp = `$command T`; chomp $tmp; $tmp =~ /\w+\:\s+(\d+)\s+\w+/; my $stopped = $1;
+   $tmp = `$command S`; chomp $tmp; $tmp =~ /\w+\:\s+(\d+)\s+\w+/; my $sleeping = $1;
+	print "$sortie | procs=$procs sleeping=$sleeping stopped=$stopped zombie=$zombie dead=$dead runnable=$runnable _warning=$warn _critical=$crit\n";
+	exit $retour;
+}
+else {
+	# Il y a du avoir un probleme, on retourne la sortie du plugin
+	print "$sortie\n";
+	exit $retour;
+}

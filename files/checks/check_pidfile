@@ -1,0 +1,63 @@
+#!/bin/bash
+#
+# check_pidfile: PID file and process checker plugin for Nagios
+# author: 2012 Chrisian Birchinger <cbirchinger@netswarm.net>
+# version: 0.1
+#
+# The really specific usage of "ps" makes this plugin probably
+# fail on anything other than "ps" from Linux procps, but it's
+# rather easy to add some hacky sed/awk parsing if required.
+#
+# Example:
+# ./check_pidfile /var/run/sshd.pid:sshd /var/run/acpid.pid
+# OK: acpid=13281 sshd(sshd)=2707
+#
+# "procname" is optional but recommended
+# Arguments can be separated by space or comma (easier for NRPE)
+
+
+if [[ -z $1 ]]; then
+	echo "Usage: $(basename $0) pidfile[:procname] [ pidfile2[:procname2] pidfile3[:procname3] ... ]"
+	exit 3
+fi
+
+# Allow space or comma seperated (for easier NRPE argument passing) argument lists
+pidfiles="${@/,/ }"
+
+oklist=''
+
+for pf in $pidfiles; do
+	name=''
+	if [[ $pf == *:* ]]; then
+		name=${pf/*:/}
+		pf=${pf/:*/}
+	fi
+
+	if [[ ! -f $pf ]]; then
+		echo "ERROR: PID file $pf does not exist. (or directory permissions?)"
+		exit 2
+	elif [[ ! -r $pf ]]; then
+		echo "ERROR: PID file $pf is not readable. (permissions?)"
+		exit 2
+	else
+		pid=$(head -n1 < $pf)
+		if ! cmd="$(basename `ps -o cmd= -p $pid | awk '{print $1}'`)"; then
+			echo "ERROR: PID $pid from $(basename $pf) is not running"
+			exit 2
+		else
+			if [[ -n $name ]];then
+				if [[ $name != $cmd ]]; then
+					echo "ERROR: Running command name \"$cmd\" does not match \"$name\""
+					exit 2
+				else
+					oklist="$(basename $pf .pid)($name)=$pid $oklist"
+				fi
+			else
+				oklist="$(basename $pf .pid)=$pid $oklist"
+			fi
+		fi
+	fi
+done
+
+echo "OK: $oklist"
+exit 0
