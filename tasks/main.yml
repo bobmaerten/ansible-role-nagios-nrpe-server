@@ -12,7 +12,7 @@
       - ../files/checks/*
 
   - name: add nagios user to sudoers for nagios checks
-    copy: src=10_nagios dest=/etc/sudoers.d/10_nagios
+    copy: src=10_nagios dest=/etc/sudoers.d/10_nagios owner=root group=root mode=0640
 
   - name: copy over base nrpe checks config
     template: src=base.cfg dest=/etc/nagios/nrpe.d/base.cfg
