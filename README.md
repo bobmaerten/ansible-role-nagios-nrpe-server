@@ -1,5 +1,7 @@
 # Nagios NRPE Server Installation
 
+[![Build Status](https://travis-ci.org/bobmaerten/ansible-role-nagios-nrpe-server.png?branch=master)](https://travis-ci.org/bobmaerten/ansible-role-nagios-nrpe-server)
+
 Installs the Nagios NRPE agent and some custom checks on the target.
 
 ## Requirements
