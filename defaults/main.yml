@@ -1,2 +1,7 @@
 ---
 nagios_plugins_directory: /usr/lib/nagios/plugins
+nagios_server: centreon
+nrpe_port: 5666
+nagios_user: nagios
+nagios_group: nagios
+nrpe_pid_file: /var/run/nagios/nrpe.pid

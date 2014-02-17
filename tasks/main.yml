@@ -18,6 +18,6 @@
     template: src=base.cfg dest=/etc/nagios/nrpe.d/base.cfg
 
   - name: copy over standard nrpe config
-    copy: src=nrpe.cfg dest=/etc/nagios/nrpe.cfg
+    template: src=nrpe.cfg dest=/etc/nagios/nrpe.cfg
     notify:
       - restart nrpe
