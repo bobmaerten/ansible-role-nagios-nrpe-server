@@ -12,18 +12,17 @@ Currently only tested on Debian Wheezy 64
 ## Role Variables
 
 Theses variables can be passed to this role:
-```
-nagios_plugins_directory: /usr/lib/nagios/plugins
-nagios_server: centreon
-nagios_user: nagios
-nagios_group: nagios
-nrpe_port: 5666
-nrpe_pid_file: /var/run/nagios/nrpe.pid
-```
+
+    nagios_plugins_directory: /usr/lib/nagios/plugins
+    nagios_server: centreon
+    nagios_user: nagios
+    nagios_group: nagios
+    nrpe_port: 5666
+    nrpe_pid_file: /var/run/nagios/nrpe.pid
 
 ## Usage
 
-    ansible-galaxy install bobmaerten.nagios-nrpe-checks
+    ansible-galaxy install bobmaerten.nagios-nrpe-server
 
 Also check the [Ansible Galaxy](https://galaxy.ansibleworks.com/intro) about page.
 
