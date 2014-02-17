@@ -4,6 +4,10 @@
   sudo: yes
   vars_files:
     - "defaults/main.yml"
+  vars:
+    nrpe_extra_commands:
+      - opendkim
+      - amavis
   tasks:
     - include: tasks/main.yml
   handlers:

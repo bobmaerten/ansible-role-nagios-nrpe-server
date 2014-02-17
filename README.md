@@ -11,7 +11,7 @@ Currently only tested on Debian Wheezy 64
 
 ## Role Variables
 
-Theses variables can be passed to this role:
+Theses variables are defined by default, and can be overriden for this role:
 
     nagios_plugins_directory: /usr/lib/nagios/plugins
     nagios_server: centreon
@@ -19,6 +19,14 @@ Theses variables can be passed to this role:
     nagios_group: nagios
     nrpe_port: 5666
     nrpe_pid_file: /var/run/nagios/nrpe.pid
+
+You can and specify other template files for handling specific NRPE commands with:
+
+    vars:
+      nrpe_extra_commands:
+        - <template>
+
+And just put *template*.cfg files in the role template directory
 
 ## Usage
 
