@@ -9,7 +9,15 @@ Currently only tested on Debian Wheezy 64
 
 ## Role Variables
 
-TODO
+Theses variables can be passed to this role:
+```
+nagios_plugins_directory: /usr/lib/nagios/plugins
+nagios_server: centreon
+nagios_user: nagios
+nagios_group: nagios
+nrpe_port: 5666
+nrpe_pid_file: /var/run/nagios/nrpe.pid
+```
 
 ## Usage
 
