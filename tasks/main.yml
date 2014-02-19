@@ -15,14 +15,14 @@
     copy: src=10_nagios dest=/etc/sudoers.d/10_nagios owner=root group=root mode=0640
 
   - name: copy over base NRPE checks config file
-    template: src=base.cfg dest=/etc/nagios/nrpe.d/base.cfg
+    template: src=base.cfg dest=/etc/nagios/nrpe.d/base.cfg owner=root group=root mode=0644
 
   - name: copy over extra NRPE checks config files
-    template: src={{item}}.cfg dest=/etc/nagios/nrpe.d/{{item}}.cfg
+    template: src={{item}}.cfg dest=/etc/nagios/nrpe.d/{{item}}.cfg owner=root group=root mode=0644
     with_items: nrpe_extra_commands
     when: nrpe_extra_commands is defined
 
   - name: copy over standard nrpe config
-    template: src=nrpe.cfg dest=/etc/nagios/nrpe.cfg
+    template: src=nrpe.cfg dest=/etc/nagios/nrpe.cfg owner=root group=root mode=0644
     notify:
       - restart nrpe
