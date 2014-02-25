@@ -1,28 +1,40 @@
 ---
-  - name: install nrpe
-    apt: state=latest pkg={{item}}
-    with_items:
-      - nagios-plugins-standard
-      - libnagios-plugin-perl
-      - nagios-nrpe-server
+- name: install nrpe
+  apt: state=latest pkg={{item}}
+  with_items:
+    - nagios-plugins-standard
+    - libnagios-plugin-perl
+    - nagios-nrpe-server
+  tags:
+    - packages
 
-  - name: copy over non-packaged checks
-    copy: src={{ item }} dest={{ nagios_plugins_directory }} owner=root group=root mode=0755
-    with_fileglob:
-      - ../files/checks/*
+- name: copy over non-packaged checks
+  copy: src={{ item }} dest={{ nagios_plugins_directory }} owner=root group=root mode=0755
+  with_fileglob:
+    - ../files/checks/*
+  tags:
+    - config
 
-  - name: add nagios user to sudoers for nagios checks
-    copy: src=10_nagios dest=/etc/sudoers.d/10_nagios owner=root group=root mode=0640
+- name: add nagios user to sudoers for nagios checks
+  copy: src=10_nagios dest=/etc/sudoers.d/10_nagios owner=root group=root mode=0640
+  tags:
+    - config
 
-  - name: copy over base NRPE checks config file
-    template: src=base.cfg dest=/etc/nagios/nrpe.d/base.cfg owner=root group=root mode=0644
+- name: copy over base NRPE checks config file
+  template: src=base.cfg dest=/etc/nagios/nrpe.d/base.cfg owner=root group=root mode=0644
+  tags:
+    - config
 
-  - name: copy over extra NRPE checks config files
-    template: src={{item}}.cfg dest=/etc/nagios/nrpe.d/{{item}}.cfg owner=root group=root mode=0644
-    with_items: nrpe_extra_commands
-    when: nrpe_extra_commands is defined
+- name: copy over extra NRPE checks config files
+  template: src={{item}}.cfg dest=/etc/nagios/nrpe.d/{{item}}.cfg owner=root group=root mode=0644
+  with_items: nrpe_extra_commands
+  when: nrpe_extra_commands is defined
+  tags:
+    - config
 
-  - name: copy over standard nrpe config
-    template: src=nrpe.cfg dest=/etc/nagios/nrpe.cfg owner=root group=root mode=0644
-    notify:
-      - restart nrpe
+- name: copy over standard nrpe config
+  template: src=nrpe.cfg dest=/etc/nagios/nrpe.cfg owner=root group=root mode=0644
+  notify:
+    - restart nrpe
+  tags:
+    - config
