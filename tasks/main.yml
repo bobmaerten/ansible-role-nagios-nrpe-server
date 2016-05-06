@@ -22,6 +22,8 @@
 
 - name: copy over base NRPE checks config file
   template: src=base.cfg dest=/etc/nagios/nrpe.d/base.cfg owner=root group=root mode=0644
+  notify:
+    - restart nrpe
   tags:
     - config
 
@@ -29,6 +31,8 @@
   template: src={{item}}.cfg dest=/etc/nagios/nrpe.d/{{item}}.cfg owner=root group=root mode=0644
   with_items: nrpe_extra_commands
   when: nrpe_extra_commands is defined
+  notify:
+    - restart nrpe
   tags:
     - config
 
